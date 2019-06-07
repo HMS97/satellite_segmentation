@@ -3,7 +3,6 @@
 from PIL import Image
 import cv2
 from path import Path
-from utils.datasets import SlippyMapTilesConcatenation
 import collections
 import torch
 import torch.backends.cudnn
@@ -14,7 +13,7 @@ from torchvision import transforms
 from torch.utils.data import Dataset
 import torchvision.transforms.functional as tf
 import segmentation_models_pytorch as smp
-
+from utils.datasets import SlippyMapTilesConcatenation
 from utils.loss import CrossEntropyLoss2d, mIoULoss2d, FocalLoss2d, LovaszLoss2d
 from utils.transforms import (
     JointCompose,
@@ -29,31 +28,36 @@ from torchvision.transforms import Resize, CenterCrop, Normalize
 from utils.metrics import Metrics
 from models.segnet.segnet import segnet
 from models.unet.unet import UNet
-from modeling.deeplab import DeepLab
 
 import random
 import os
 import tqdm
 import json
 device = 'cuda'
-path = '/home/shiyi/beshe/dataset/'
+path = '/home/shiyi/beshe/kinds_dataset/'
 
-def get_model():
-    # model = UNet( num_classes= 2 )
-    model = segnet(  n_classes   = 2 )
-##    model =smp.PSPNet(classes= 2 )
-#    model = DeepLab(num_classes=2,backbone='resnet')
-
+def get_model(num_classes):
+#   model = UNet( num_classes = num_classes )
+#   model = segnet(  n_classes = num_classes )
+    model =smp.PSPNet(classes= 5 )
     model.train()
     return model.to(device)
-net = get_model()
+
+
+net = get_model(5)
+history = collections.defaultdict(list)
+learning_rate = 5e-3
+num_epochs = 50
+num_classes = 5
+optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
+criterion = mIoULoss2d().to(device)
+
 
 
 #net = torch.load('model/0514pspnet.pth')
 def get_dataset_loaders( workers):
     target_size = 512
     batch_size = 4  
-#     path = dataset["common"]["dataset"]
 
     mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
@@ -72,11 +76,11 @@ def get_dataset_loaders( workers):
     )
 
     train_dataset = SlippyMapTilesConcatenation(
-        os.path.join(path, "training", "images"), os.path.join(path, "training", "labels"), transform,debug = True
+        os.path.join(path, "training", "images"), os.path.join(path, "training", "labels"), transform,debug = False
     )
 
     val_dataset = SlippyMapTilesConcatenation(
-        os.path.join(path, "validation", "images"), os.path.join(path, "validation", "labels"), transform,debug = True
+        os.path.join(path, "validation", "images"), os.path.join(path, "validation", "labels"), transform,debug = False
     )
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, drop_last=True, num_workers=workers)
@@ -165,12 +169,6 @@ def validate(loader, num_classes, device, net, criterion):
         "mcc": metrics.get_mcc(),
     }
 
-history = collections.defaultdict(list)
-learning_rate = 5e-3
-num_classes = 2
-optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
-criterion = mIoULoss2d().to(device)
-num_epochs = 10
 
 for epoch in range(num_epochs):
     print("Epoch: {}/{}".format(epoch + 1, num_epochs))
@@ -195,13 +193,12 @@ for epoch in range(num_epochs):
     for k, v in val_hist.items():
         history["val " + k].append(v)
 
-    # checkpoint = "model/checkpoint-{:05d}-of-{:05d}.pth".format(epoch + 1, num_epochs)
 
-    #checkpoint = 'model/0517deeplab_50_epoch.pth'
-    #torch.save(net,checkpoint)
+    checkpoint = 'model/psp_kinds_50_epoch.pth'
+    torch.save(net,checkpoint)
 
 json = json.dumps(history)
-f = open("model/0517segnet_20_test.json","w")
+f = open("model/psp_kindsest0607.json","w")
 f.write(json)
 f.close()
 
