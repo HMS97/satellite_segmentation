@@ -1,10 +1,6 @@
-
-
-
-
 # satellite_segmentaion
 
-pytorch,unet,aerial image,segnet,pspnet
+
 
 #  Introduce: 
 
@@ -18,6 +14,10 @@ pytorch,unet,aerial image,segnet,pspnet
 
 ### 	I use three models to predict the result. Unet、PSPnet and Segnet. And then I vote for a final result by combining the models' result. Then I do some post_processing for voted images. And then there can be some little improvement.
 
+### 	![image](https://github.com/wuchangsheng951/satellite_segmentaion/tree/master/images/1.png)
+
+
+
 #  About the Result:
 
 ### 	I just extract road from the models for now. So now I just show the Iou result about the road. I train them for 50 epochs and learning rate is1e-4. Adam optimizer. Here are the result.
@@ -28,6 +28,10 @@ pytorch,unet,aerial image,segnet,pspnet
 | Seg-net    | **0.90533** | 0**.78413** | 0.**06660** | **0.09993** |
 | Psp-net    | 0.90404     | *0.75175*   | *0.06693*   | *0.11606*   |
 
+### ![image](https://github.com/wuchangsheng951/satellite_segmentaion/tree/master/images/2.png)
+
+
+
 ###  	And here is the performance in the different validation area which contaion a large area. As we can see the performance after voting can imporve a lot.
 
 | Model  | Valid_1   （city）% | Valid_2   （city）% | Valid_3   （city）% | Valid_4   （town）% | Valid_5   （town）% |
@@ -37,7 +41,13 @@ pytorch,unet,aerial image,segnet,pspnet
 | Pspnet | `0.75183`           | `0.75508`           | `0.71053`           | `0.62960`           | `0.27243`           |
 | Vote   | **0.77340**         | 0.78339*            | 0.75360*            | 0.67627             | `0.28731`           |
 
+![image](https://github.com/wuchangsheng951/satellite_segmentaion/tree/master/images/3.png)
+
+
+
 #  	If you want use this code. you can just clone it . I will add the requirments.txt soon.
+
+### 
 
 
 
@@ -83,7 +93,7 @@ save_dir = '0514predict1.png'
 
 ```
 # you can just run 
-python post_dea.py
+python post_deal.py
 ```
 
 ​	
