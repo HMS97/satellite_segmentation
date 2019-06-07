@@ -188,8 +188,6 @@ for epoch in range(num_epochs):
             'fg_iou',val_hist["fg_iou"],
             'mcc',val_hist["mcc"])
 
-    
-
     for k, v in val_hist.items():
         history["val " + k].append(v)
 
