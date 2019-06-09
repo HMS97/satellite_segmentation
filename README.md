@@ -8,13 +8,20 @@
 
 #  About the dataset:
 
-### The dataset must conation images and masks.
+### The dataset must conation images and masks. The dataset is shared below about five kinds of objects. 
+
+链接：https://pan.baidu.com/s/1TcQuMAY2aEiVrFHJd5YIAA 
+提取码：vfps 
 
 #  About the mothod:
 
 ### 	I use three models to predict the result. Unet、PSPnet and Segnet. And then I vote for a final result by combining the models' result. Then I do some post_processing for voted images. And then there can be some little improvement.
 
+
+
 ### 	![image](https://github.com/wuchangsheng951/satellite_segmentaion/tree/master/images/1.png)
+
+
 
 
 

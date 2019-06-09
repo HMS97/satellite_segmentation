@@ -43,12 +43,11 @@ def get_model(num_classes):
     model.train()
     return model.to(device)
 
-
-net = get_model(5)
+num_classes = 5
+net = get_model(num_classes)
 history = collections.defaultdict(list)
 learning_rate = 5e-3
 num_epochs = 50
-num_classes = 5
 optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
 criterion = mIoULoss2d().to(device)
 
