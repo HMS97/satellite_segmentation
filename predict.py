@@ -99,7 +99,7 @@ def input_and_output(pic_path,model,generate_data):
                 cv2.imwrite(f'temp_pic/{i}_{j}.png',crop)
             if generate_data== False:
                 mask_whole[i*stride:i*stride+image_size,j*stride:j*stride+image_size] = result[map_list.index(f'{i}_{j}.png')]
-    return mask_whole
+    return mask_whole[:image.shape[0],:image.shape[1]]
 
 
 def get_dataset_loaders( workers):

@@ -39,7 +39,7 @@ path = '/home/shiyi/beshe/kinds_dataset/'
 def get_model(num_classes):
 #   model = UNet( num_classes = num_classes )
 #   model = segnet(  n_classes = num_classes )
-    model =smp.PSPNet(classes= 5 )
+    model =smp.PSPNet(classes= num_classes )
     model.train()
     return model.to(device)
 
