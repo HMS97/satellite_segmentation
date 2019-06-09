@@ -71,7 +71,13 @@ image_path = Path('./BDCI2017-seg/CCF-training-Semi')/f'{i}.png'
 img_class_path = Path('./BDCI2017-seg/CCF-training-Semi')/ f'{i}_class_vis.png'
 ```
 
+Note： This step is for the big picture no for less than 1000*1000 shape. If you have hundreds of images, you can just jump to step two.
+
 ### Second step: train
+
+NOTE: If you want to train on your own dataset, the image name and the mask name must be the same. and the name suffix must be png format.
+
+
 
  ###  	give the path of dataset and alter the params you want to use.
 
@@ -82,6 +88,15 @@ learning_rate = 5e-3
 num_epochs = 50
 num_classes = 5
 optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
+
+train_dataset = SlippyMapTilesConcatenation(
+os.path.join(path, "training", "images"), os.path.join(path, "training", "labels"), transform,debug = False
+)
+
+val_dataset = SlippyMapTilesConcatenation(
+os.path.join(path, "validation", "images"), os.path.join(path, "validation", "labels"), transform,debug = False
+)
+
 ```
 
 ###  Third step:  Prediction
