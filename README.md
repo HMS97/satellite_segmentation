@@ -10,8 +10,10 @@
 
 ### The dataset must conation images and masks. The dataset is shared below about five kinds of objects. 
 
-链接：https://pan.baidu.com/s/1TcQuMAY2aEiVrFHJd5YIAA 
-提取码：vfps 
+baidu cloud：https://pan.baidu.com/s/1TcQuMAY2aEiVrFHJd5YIAA 
+code：vfps
+
+google dirve：https://drive.google.com/open?id=1gE6WeoSiXTPEr-mYH8uggXiJEISgBHYZ 
 
 #  About the mothod:
 
