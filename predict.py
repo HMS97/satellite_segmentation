@@ -33,7 +33,7 @@ import random
 import os
 import tqdm
 import json
-
+import numpy as np
 
 ## need to create a file to store temp pictures
 try:
@@ -129,8 +129,9 @@ def get_dataset_loaders( workers):
 
     return test_loader
 
-def data_for vote():
-    """this function is set up for voting. If you only want to use one model to predict please ignore it"""
+
+def data_for_vote():
+    # """this function is set up for voting. If you only want to use one model to predict please ignore it"""
     if not os.path.exists('unet_predict'):
         os.makedirs('unet_predict')
     if not os.path.exists('segnet_predict'):
