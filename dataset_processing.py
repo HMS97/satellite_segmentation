@@ -168,14 +168,14 @@ def generate(num = 1000,split = 5, crop_size_h = 512, crop_size_w = 512, save_di
         print(image_path)
         print(img_class_path)
         crop_by_random(num,image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir+'training/', same_scale = same_scale )
-        crop_by_sequence(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir'training/',  same_scale = same_scale)
+        crop_by_sequence(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir+'training/',  same_scale = same_scale)
 
     ## split the train dataset and validation dataset
-    img_sample = random.sample(Path('./{save_dir}/training/images/').files(),len(Path('./{save_dir}/training/images/').files())//split )
-    train_img_dir = './{save_dir}/training/images/'
-    train_label_dir = './{save_dir}/training/labels/'
-    val_img_dir = './{save_dir}/validation/images/'
-    val_label_dir = './{save_dir}/validation/labels/'
+    img_sample = random.sample(Path(f'./{save_dir}/training/images/').files(),len(Path(f'./{save_dir}/training/images/').files())//split )
+    train_img_dir = f'./{save_dir}/training/images/'
+    train_label_dir = f'./{save_dir}/training/labels/'
+    val_img_dir = f'./{save_dir}/validation/images/'
+    val_label_dir = f'./{save_dir}/validation/labels/'
     for i in sample:
         shutil.move(train_img_dir + i.name,f'{val_img_dir}{i.name}')
         shutil.move(train_label_dir + i.name ,f'{val_label_dir}{i.name}')
