@@ -140,7 +140,7 @@ def crop_by_random(num,image_path,img_class_path,crop_size_w,crop_size_h,prefix,
 
 
 
-def generate(num = 1000,split = 5, crop_size_h = 512, crop_size_w = 512, save_dir = './kinds_dataset/training/',string = '', same_scale = False):
+def generate(num = 1000,split = 5, crop_size_h = 512, crop_size_w = 512, save_dir = './kinds_dataset/',string = '', same_scale = False):
     """
     num: the number of pictures split by random crop
     split: trainset : validationset
@@ -167,8 +167,8 @@ def generate(num = 1000,split = 5, crop_size_h = 512, crop_size_w = 512, save_di
         prefix = string + prefix
         print(image_path)
         print(img_class_path)
-        crop_by_random(num,image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir, same_scale = same_scale )
-        crop_by_sequence(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir,  same_scale = same_scale)
+        crop_by_random(num,image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir+'training/', same_scale = same_scale )
+        crop_by_sequence(image_path,img_class_path,crop_size_w,crop_size_h,prefix,save_dir'training/',  same_scale = same_scale)
 
     ## split the train dataset and validation dataset
     img_sample = random.sample(Path('./{save_dir}/training/images/').files(),len(Path('./{save_dir}/training/images/').files())//split )
