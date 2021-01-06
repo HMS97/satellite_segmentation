@@ -28,13 +28,13 @@ from torchvision.transforms import Resize, CenterCrop, Normalize
 from utils.metrics import Metrics
 from models.segnet.segnet import segnet
 from models.unet.unet import UNet
-
+from torch import nn
 import random
 import os
 import tqdm
 import json
 device = 'cuda'
-path = '/home/shiyi/beshe/kinds_dataset/'
+path = ''
 
 def get_model(num_classes):
 #   model = UNet( num_classes = num_classes )
@@ -43,14 +43,14 @@ def get_model(num_classes):
     model.train()
     return model.to(device)
 
-num_classes = 5
+num_classes = 2
 net = get_model(num_classes)
 history = collections.defaultdict(list)
 learning_rate = 5e-3
 num_epochs = 50
 optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate)
-criterion = mIoULoss2d().to(device)
-
+# criterion = mIoULoss2d().to(device)
+criterion = nn.CrossEntropyLoss()
 
 
 #net = torch.load('model/0514pspnet.pth')
@@ -62,18 +62,15 @@ def get_dataset_loaders( workers):
 
     transform = JointCompose(
         [
-#             JointTransform(ConvertImageMode("RGB"), ConvertImageMode("P")),
+            JointTransform(ConvertImageMode("RGB"), ConvertImageMode("P")),
             JointTransform(Resize(target_size, Image.BILINEAR), Resize(target_size, Image.NEAREST)),
             JointTransform(CenterCrop(target_size), CenterCrop(target_size)),
             JointRandomHorizontalFlip(0.5),
             JointRandomRotation(0.5, 90),
-            JointRandomRotation(0.5, 90),
-            JointRandomRotation(0.5, 90),
-            JointTransform(ImageToTensor(), MaskToTensor()),
+            JointTransform(ImageToTensor(), ImageToTensor()),
             JointTransform(Normalize(mean=mean, std=std), None),
         ]
     )
-
     train_dataset = SlippyMapTilesConcatenation(
         os.path.join(path, "training", "images"), os.path.join(path, "training", "labels"), transform,debug = False
     )
@@ -86,7 +83,6 @@ def get_dataset_loaders( workers):
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, drop_last=True, num_workers=workers)
 
     return train_loader, val_loader
-train_loader, val_loader = get_dataset_loaders( 5)
 
 
 
@@ -99,18 +95,16 @@ def train(loader, num_classes, device, net, optimizer, criterion):
     net.train()
     for images, masks  in tqdm.tqdm(loader):
         images = images.to(device)
-        masks = masks.to(device)
-
-        assert images.size()[2:] == masks.size()[1:], "resolutions for images and masks are in sync"
+        masks = masks.to(device).long()
+        # assert images.size()[2:] == masks.size()[1:], "resolutions for images and masks are in sync"
 
         num_samples += int(images.size(0))
 
         optimizer.zero_grad()
         outputs = net(images)
 
-        assert outputs.size()[2:] == masks.size()[1:], "resolutions for predictions and masks are in sync"
-        assert outputs.size()[1] == num_classes, "classes for predictions and dataset are in sync"
-
+        # assert outputs.size()[2:] == masks.size()[1:], "resolutions or predictions and masks are in sync"
+        # assert outputs.size()[1] == num_classes, "classes for predictions and dataset are in sync"
         loss = criterion(outputs, masks)
         loss.backward()
 
@@ -122,7 +116,7 @@ def train(loader, num_classes, device, net, optimizer, criterion):
             prediction = output.detach()
             metrics.add(mask, prediction)
 
-    assert num_samples > 0, "dataset contains training images and labels"
+    # assert num_samples > 0, "dataset contains training images and labels"
 
     return {
         "loss": running_loss / num_samples,
@@ -168,36 +162,42 @@ def validate(loader, num_classes, device, net, criterion):
         "mcc": metrics.get_mcc(),
     }
 
+         
+def main():
 
-for epoch in range(num_epochs):
-    print("Epoch: {}/{}".format(epoch + 1, num_epochs))
+    train_loader, val_loader = get_dataset_loaders( 5)
+    print(len(train_loader))
+    for epoch in range(num_epochs):
+        print("Epoch: {}/{}".format(epoch + 1, num_epochs))
 
-    train_hist = train(train_loader, num_classes, device, net, optimizer, criterion)
-    print( 'loss',train_hist["loss"],
-            'miou',train_hist["miou"],
-            'fg_iou',train_hist["fg_iou"],
-            'mcc',train_hist["mcc"] )
+        train_hist = train(train_loader, num_classes, device, net, optimizer, criterion)
+        print( 'loss',train_hist["loss"],
+                'miou',train_hist["miou"],
+                'fg_iou',train_hist["fg_iou"],
+                'mcc',train_hist["mcc"] )
 
-    for k, v in train_hist.items():
-        history["train " + k].append(v)
+        for k, v in train_hist.items():
+            history["train " + k].append(v)
 
-    val_hist = validate(val_loader, num_classes, device, net, criterion)
-    print('loss',val_hist["loss"],
-            'miou',val_hist["miou"],
-            'fg_iou',val_hist["fg_iou"],
-            'mcc',val_hist["mcc"])
+        val_hist = validate(val_loader, num_classes, device, net, criterion)
+        print('loss',val_hist["loss"],
+                'miou',val_hist["miou"],
+                'fg_iou',val_hist["fg_iou"],
+                'mcc',val_hist["mcc"])
 
-    for k, v in val_hist.items():
-        history["val " + k].append(v)
-
-
-    checkpoint = 'model/psp_kinds_50_epoch.pth'
-    torch.save(net,checkpoint)
-
-json = json.dumps(history)
-f = open("model/psp_kindsest0607.json","w")
-f.write(json)
-f.close()
+        for k, v in val_hist.items():
+            history["val " + k].append(v)
 
 
+        checkpoint = 'model/psp_kinds_50_epoch.pth'
+        torch.save(net,checkpoint)
 
+    json = json.dumps(history)
+    f = open("model/psp_kindsest0607.json","w")
+    f.write(json)
+    f.close()
+
+
+
+if __name__ == '__main__':
+    main()

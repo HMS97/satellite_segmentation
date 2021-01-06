@@ -11,9 +11,9 @@ from PIL import Image
 import torch.utils.data
 from torchvision.transforms import Compose, Normalize
 from .transforms import ConvertImageMode, ImageToTensor
-
+import cv2
 from .tiles import tiles_from_slippy_map, buffer_tile_image
-
+import numpy as np
 
 mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
@@ -58,6 +58,7 @@ class SlippyMapTilesConcatenation(torch.utils.data.Dataset):
         self.test = test
         if debug == False:
             self.inputs =  Path(inputs).files()
+            print(self.inputs)
             if self.test == False:
                 self.target = Path(target).files()
         else:
@@ -75,10 +76,13 @@ class SlippyMapTilesConcatenation(torch.utils.data.Dataset):
 
         images = Image.open(self.inputs[i])
         if self.test == False:
-            mask  = Image.open(self.target[i])
+            mask = Image.open(self.target[i]).convert('L')
+        
             if self.joint_transform is not None:
                 images, mask = self.joint_transform(images, mask)
 
+            if len(mask.shape) == 3: 
+                mask = mask.squeeze(0)
             return images, mask
         else:
             return self.test_transform(images)
