@@ -37,7 +37,7 @@ google dirve：https://drive.google.com/open?id=1gE6WeoSiXTPEr-mYH8uggXiJEISgBHY
 | Seg-net    | **0.90533** | 0**.78413** | 0.**06660** | **0.09993** |
 | Psp-net    | 0.90404     | *0.75175*   | *0.06693*   | *0.11606*   |
 
-### ![image](https://github.com/wuchangsheng951/satellite_segmentaion/tree/master/images/2.png)
+### ![image](images/2.png)
 
 
 
@@ -50,7 +50,7 @@ google dirve：https://drive.google.com/open?id=1gE6WeoSiXTPEr-mYH8uggXiJEISgBHY
 | Pspnet | `0.75183`           | `0.75508`           | `0.71053`           | `0.62960`           | `0.27243`           |
 | Vote   | **0.77340**         | 0.78339*            | 0.75360*            | 0.67627             | `0.28731`           |
 
-![image](https://github.com/wuchangsheng951/satellite_segmentaion/tree/master/images/3.png)
+![image](images/3.png)
 
 
 
