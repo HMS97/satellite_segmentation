@@ -2,7 +2,7 @@
 
 
 
-#  Introduce: 
+#  Introduction: 
 
 ### My final thsis is about satellite segmentaion.  I need to extract road、builidings、water or plants from the images. 
 
