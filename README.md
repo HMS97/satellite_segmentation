@@ -34,7 +34,7 @@ google dirve：https://drive.google.com/open?id=1gE6WeoSiXTPEr-mYH8uggXiJEISgBHY
 | Model_name | Train_miou  | Val_miou    | Train loss  | Loss loss   |
 | ---------- | ----------- | ----------- | ----------- | ----------- |
 | U-net      | 0.87640     | 0.74904     | 0.07287     | 0.10107     |
-| Seg-net    | **0.90533** | 0**.78413** | 0.**06660** | **0.09993** |
+| Seg-net    | **0.90533** | **0.78413** | **0.06660** | **0.09993** |
 | Psp-net    | 0.90404     | *0.75175*   | *0.06693*   | *0.11606*   |
 
 ### ![image](images/2.png)
