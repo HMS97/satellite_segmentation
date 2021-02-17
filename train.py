@@ -33,6 +33,7 @@ import random
 import os
 import tqdm
 import json
+import pathlib
 device = 'cuda'
 path = ''
 
@@ -188,9 +189,9 @@ def main():
         for k, v in val_hist.items():
             history["val " + k].append(v)
 
+        pathlib.Path(os.path.join('model' )).mkdir(parents=True, exist_ok=True) 
 
-        checkpoint = 'model/psp_kinds_50_epoch.pth'
-        torch.save(net,checkpoint)
+        torch.save(net,f'model/psp_kinds_{num_epochs}_epoch.pth')
 
     json = json.dumps(history)
     f = open("model/psp_kindsest0607.json","w")
